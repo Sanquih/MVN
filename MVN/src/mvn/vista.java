@@ -237,24 +237,6 @@ public class vista extends javax.swing.JFrame {
                 {null, null, null},
                 {null, null, null},
                 {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
                 {null, null, null}
             },
             new String [] {
@@ -457,7 +439,7 @@ public class vista extends javax.swing.JFrame {
         }
         memory.setText(memorys);
         memory.setCaretPosition(0);
-        for(int i=0; i<50; i++){
+        for(int i=0; i<32; i++){
             int aux=i*2;
             String hexadecimalaux = Integer.toHexString(aux);
             if(hexadecimalaux.length()==1) this.programa.setValueAt("00"+hexadecimalaux, i, 0);
@@ -843,9 +825,14 @@ public class vista extends javax.swing.JFrame {
 
     /** Método para carregar em memoria os dados e o programa (LOADER).
      */
-    private void montarEmMemoria() {  
-        loaded++;
-        for(int i=0; i<50; i++){
+    private void montarEmMemoria() {
+        if(loaded<63){
+            loaded++;
+        }else{
+            loaded=0;
+        }
+        
+        for(int i=0; i<32; i++){
             if(this.programa.getValueAt(i, 1)!="X"){                      
                 co=transformarCO((String) this.programa.getValueAt(i, 1));
                 op=(String) this.programa.getValueAt(i, 2);
@@ -855,8 +842,8 @@ public class vista extends javax.swing.JFrame {
                 DadoEmMemoria((String) this.dados.getValueAt(i, 0),(String) this.dados.getValueAt(i, 1));
             }
         }
-        for(int i=0; i<50; i++){
-            int aux=((loaded*50+i)*2);
+        for(int i=0; i<32; i++){
+            int aux=((loaded*32+i)*2);
             String hexadecimalaux = Integer.toHexString(aux);
             if(hexadecimalaux.length()==1) this.programa.setValueAt("00"+hexadecimalaux, i, 0);
             if(hexadecimalaux.length()==2) this.programa.setValueAt("0"+hexadecimalaux, i, 0);
