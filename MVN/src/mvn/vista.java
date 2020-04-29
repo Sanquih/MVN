@@ -44,6 +44,11 @@ public class vista extends javax.swing.JFrame {
      * bandeira para saber se tem que ler a entrada
      */
     boolean readEntrada=false;
+    
+    /**
+     * Fragmentos de codigo montados
+     */
+    int loaded=0;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -250,56 +255,6 @@ public class vista extends javax.swing.JFrame {
                 {null, null, null},
                 {null, null, null},
                 {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
                 {null, null, null}
             },
             new String [] {
@@ -309,16 +264,9 @@ public class vista extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, true, true
-            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
         });
         jScrollPane3.setViewportView(programa);
@@ -326,7 +274,6 @@ public class vista extends javax.swing.JFrame {
             programa.getColumnModel().getColumn(0).setResizable(false);
             programa.getColumnModel().getColumn(1).setResizable(false);
             programa.getColumnModel().getColumn(2).setResizable(false);
-            programa.getColumnModel().getColumn(2).setHeaderValue("OP");
         }
 
         memory.setEditable(false);
@@ -492,6 +439,7 @@ public class vista extends javax.swing.JFrame {
         ci=-1;
         co="";
         op="";
+        loaded=0;
         stop=false;
         readEntrada=false;
         reiniciar.setEnabled(true);
@@ -509,11 +457,12 @@ public class vista extends javax.swing.JFrame {
         }
         memory.setText(memorys);
         memory.setCaretPosition(0);
-        for(int i=0; i<100; i++){
+        for(int i=0; i<50; i++){
             int aux=i*2;
             String hexadecimalaux = Integer.toHexString(aux);
             if(hexadecimalaux.length()==1) this.programa.setValueAt("00"+hexadecimalaux, i, 0);
-            if(hexadecimalaux.length()==2) this.programa.setValueAt("0"+hexadecimalaux, i, 0);            
+            if(hexadecimalaux.length()==2) this.programa.setValueAt("0"+hexadecimalaux, i, 0);
+            if(hexadecimalaux.length()==3) this.programa.setValueAt(hexadecimalaux, i, 0);
             this.programa.setValueAt("X", i, 1);
             this.programa.setValueAt("XXX", i, 2);
             this.dados.setValueAt("XXX", i, 0);
@@ -590,7 +539,6 @@ public class vista extends javax.swing.JFrame {
         montarEmMemoria();
         this.step.setEnabled(true);
         this.run.setEnabled(true);
-        this.load.setEnabled(false);
     }//GEN-LAST:event_loadActionPerformed
 
     private void stepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stepActionPerformed
@@ -604,7 +552,8 @@ public class vista extends javax.swing.JFrame {
         }
         if(!co.contains("X")){
             executar();
-            nextStep();            
+            nextStep();   
+            this.load.setEnabled(false);         
         }else{
             this.step.setEnabled(false);
             this.run.setEnabled(false);
@@ -694,6 +643,7 @@ public class vista extends javax.swing.JFrame {
         while(!co.contains("X") && !stop){
             executar();
             nextStep();
+            this.load.setEnabled(false);
         }
     }
 
@@ -893,8 +843,9 @@ public class vista extends javax.swing.JFrame {
 
     /** Método para carregar em memoria os dados e o programa (LOADER).
      */
-    private void montarEmMemoria() {
-        for(int i=0; i<100; i++){
+    private void montarEmMemoria() {  
+        loaded++;
+        for(int i=0; i<50; i++){
             if(this.programa.getValueAt(i, 1)!="X"){                      
                 co=transformarCO((String) this.programa.getValueAt(i, 1));
                 op=(String) this.programa.getValueAt(i, 2);
@@ -903,6 +854,17 @@ public class vista extends javax.swing.JFrame {
             if(this.dados.getValueAt(i, 0)!="XXX" & this.dados.getValueAt(i, 1)!="XX"){
                 DadoEmMemoria((String) this.dados.getValueAt(i, 0),(String) this.dados.getValueAt(i, 1));
             }
+        }
+        for(int i=0; i<50; i++){
+            int aux=((loaded*50+i)*2);
+            String hexadecimalaux = Integer.toHexString(aux);
+            if(hexadecimalaux.length()==1) this.programa.setValueAt("00"+hexadecimalaux, i, 0);
+            if(hexadecimalaux.length()==2) this.programa.setValueAt("0"+hexadecimalaux, i, 0);
+            if(hexadecimalaux.length()==3) this.programa.setValueAt(hexadecimalaux, i, 0);     
+            this.programa.setValueAt("X", i, 1);
+            this.programa.setValueAt("XXX", i, 2);
+            this.dados.setValueAt("XXX", i, 0);
+            this.dados.setValueAt("XX", i, 1);
         }
     }
 
