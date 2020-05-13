@@ -653,7 +653,7 @@ public class vista extends javax.swing.JFrame {
                 }
                 break; 
             case "3":  //LV                
-                acomulador.setText(entradaToAcomulador(op.substring(1,3)));
+                acomulador.setText((op.substring(1,3)));
                 ci=ci+2;
                 break; 
             case "4":  //+
@@ -836,7 +836,13 @@ public class vista extends javax.swing.JFrame {
             if(this.programa.getValueAt(i, 1)!="X"){                      
                 co=transformarCO((String) this.programa.getValueAt(i, 1));
                 op=(String) this.programa.getValueAt(i, 2);
-                InstrucaoEmMemoria((String) this.programa.getValueAt(i, 0),co,op);
+                if("3".equals(co)){
+                    String aux = entradaToAcomulador(op);
+                    if(aux.length()== 2) aux="0"+aux;
+                    InstrucaoEmMemoria((String) this.programa.getValueAt(i, 0),co,aux);                    
+                }else{
+                    InstrucaoEmMemoria((String) this.programa.getValueAt(i, 0),co,op); 
+                }
             }
             if(this.dados.getValueAt(i, 0)!="XXX" & this.dados.getValueAt(i, 1)!="XX"){
                 DadoEmMemoria((String) this.dados.getValueAt(i, 0),(String) this.dados.getValueAt(i, 1));
@@ -910,7 +916,7 @@ public class vista extends javax.swing.JFrame {
     }
 
     /** Método para transformar uma entrada do usuario a lenguage de maquina.
-     * @param entrada String - entrada em entero ou hexadecimal.
+     * @param entrada String - entrada em decimal.
      * @return String - Numero hexadecimal tendo em conta se é negativo.
      */
     private String entradaToAcomulador(String entrada) {
